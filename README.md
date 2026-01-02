@@ -32,8 +32,8 @@ Appends real-time AI-generated captions from your webcam to user messages in Sil
 
 ## Setup Face Recognition (Optional but Recommended)
 1. In SillyTavern extension settings, enable "Face Recognition".
-2. Click "Upload Photos" and select 5-10 clear photos of your face.
-3. Click "Regenerate Embeddings" to process them (you can delete the photos afterward for privacy).
+2. Type a name for the person you're uploading (use `{{user}}` for yourself), select 5-10 clear photos of your face.
+3. Click `upload & generate` to process them.
 4. Use the "Preview Webcam" button to test your camera setup.
 
 ## Usage
