@@ -1,1 +1,8 @@
-
+flask
+flask-cors
+opencv-python
+requests
+torch
+insightface
+onnxruntime-gpu
+numpy
