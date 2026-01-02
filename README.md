@@ -5,6 +5,7 @@ Appends real-time AI-generated captions from your webcam to user messages in Sil
 ## Features
 - Automatic captioning every N messages (configurable, default every 1).
 - Face recognition using InsightFace (checks against your reference photos).
+- Multiple faces can be added for detection so characters recognize them by their given name (even Doobie the dog!)
 - Custom hint templates (random variation) and caption prompts.
 - Manual "Look" trigger button (even if auto is off).
 - Toggle button and hotkey (Alt + W).
