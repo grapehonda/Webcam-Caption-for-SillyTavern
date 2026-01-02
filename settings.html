@@ -1,0 +1,60 @@
+<!-- Settings UI for the extension -->
+<div class="auto_webcam_caption-settings">
+    <div class="inline-drawer">
+        <div class="inline-drawer-toggle inline-drawer-header">
+            <b>Auto Webcam Caption</b>
+            <div class="inline-drawer-icon fa-solid fa-circle-chevron-down down"></div>
+        </div>
+        <div class="inline-drawer-content">
+            <div class="auto_webcam_caption_block flex-container">
+                <input id="webcam_enabled" type="checkbox" />
+                <label for="webcam_enabled">Enable Captioning</label>
+            </div>
+
+            <div class="auto_webcam_caption_block flex-container">
+                <input id="webcam_face_recognition_enabled" type="checkbox" />
+                <label for="webcam_face_recognition_enabled">Enable Face Recognition</label>
+            </div>
+
+            <div id="upload_section" class="auto_webcam_caption_block flex-container" style="flex-direction: row; align-items: center; margin-top: 10px;">
+            </div>
+
+            <div class="auto_webcam_caption_block flex-container">
+                <label for="webcam_det_threshold" title="Global threshold for detecting any face (lower = more sensitive to faint/partial faces but risks noise; higher = stricter, might miss some). This is separate from individual recognition sliders, which match detected faces to known people.">Face Detection Threshold:</label>
+                <input id="webcam_det_threshold" type="range" min="0.1" max="0.9" step="0.05" value="0.5" />
+                <span id="webcam_det_threshold_value">0.5</span>
+            </div>
+
+            <div class="auto_webcam_caption_block flex-container" style="align-items: center;">
+                <label for="webcam_frequency" style="margin-right: 5px;">Caption Frequency: Every</label>
+                <input id="webcam_frequency" type="number" min="1" max="20" step="1" value="1" style="width: 50px; margin-right: 5px;" />
+                <span>message(s)</span>
+            </div>
+
+            <div class="auto_webcam_caption_block flex-container">
+                <label for="webcam_manual_message">Custom Manual Trigger Message</label>
+                <input id="webcam_manual_message" type="text" class="text_pole wide100p" maxlength="100" />
+            </div>
+
+            <div class="auto_webcam_caption_block flex-container">
+                <label for="webcam_hint_template">Custom Hint Template (use {{caption}} as placeholder; one per line for random variation)</label>
+                <textarea id="webcam_hint_template" class="text_pole wide100p" rows="3"></textarea>
+            </div>
+
+            <div class="auto_webcam_caption_block flex-container" style="flex-direction: column;">
+                <div style="display: flex; align-items: center; justify-content: flex-start; width: 100%;">
+                    <label for="webcam_caption_prompt" style="flex: 0 0 auto; margin-right: 10px;">Custom Caption Prompt</label>
+                    <select id="webcam_prompt_variant" style="flex: 1 1 auto;"></select>
+                </div>
+                <textarea id="webcam_caption_prompt" class="text_pole wide100p" rows="6"></textarea>
+            </div>
+
+            <div class="auto_webcam_caption_block flex-container">
+                <input id="webcam_prompt_name" type="text" placeholder="Name your prompt" class="text_pole" maxlength="100" style="width: 200px; margin-right: 10px;">
+                <button id="webcam_save_prompt" style="padding: 5px 10px; background-color: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 0.9em;">Save Prompt</button>
+            </div>
+
+            <hr class="sysHR" />
+        </div>
+    </div>
+</div>

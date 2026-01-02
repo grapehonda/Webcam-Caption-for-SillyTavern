@@ -1,0 +1,13 @@
+{
+  "display_name": "Auto Webcam Caption",
+  "description": "Appends a real-time vision caption from your webcam to every user message.",
+  "loading_order": 10,
+  "requires": [],
+  "optional": [],
+  "js": "index.js",
+  "css": "style.css",
+  "author": "Gil",
+  "version": "1.0",
+  "homePage": "",
+  "generate_interceptor": "injectWebcamCaption"
+}

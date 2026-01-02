@@ -1,0 +1,105 @@
+/* Styles for the extension settings UI */
+.auto_webcam_caption-settings .inline-drawer-content {
+    padding: 10px;
+}
+
+.auto_webcam_caption_block {
+    margin-bottom: 10px;
+    align-items: center;
+}
+
+.auto_webcam_caption_block label {
+    margin-left: 5px;
+}
+
+.auto_webcam_caption_block input[type="text"] {
+    margin-top: 5px;
+    width: 100%;
+}
+
+.auto_webcam_caption_block input[type="text"] {
+    margin-top: 5px;
+    width: 100%;
+    resize: vertical;
+}
+
+.auto_webcam_caption_block input[type="range"] {
+    margin-top: 5px;
+    width: 200px;
+    height: 8px;
+    background: #ddd;
+    border-radius: 5px;
+    outline: none;
+    -webkit-appearance: none;
+}
+
+.auto_webcam_caption_block input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 16px;
+    height: 16px;
+    background: #2196F3;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.auto_webcam_caption_block input[type="range"]::-webkit-slider-runnable-track {
+    background: linear-gradient(to right, #2196F3 var(--value), #ddd var(--value));
+}
+
+.auto_webcam_caption_block #webcam_frequency_value {
+    margin-left: 10px;
+    font-size: 0.9em;
+    color: #ccc;  /* Subtle text */
+}
+#known_faces_list label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    display: block;
+}
+
+#known_faces_list p {
+    color: #ccc;
+    font-style: italic;
+}
+
+#webcam_prompt_variant option:hover {
+    background-color: #2196F3;
+    color: white;
+}
+
+/* NEW: Orange fill for det threshold slider to distinguish it */
+.auto_webcam_caption_block input[type="range"]#webcam_det_threshold::-webkit-slider-runnable-track {
+    background: linear-gradient(to right, #FF9800 var(--value), #ddd var(--value));  /* Orange fill for distinction */
+}
+
+.auto_webcam_caption_block input[type="range"]#webcam_det_threshold {
+}
+
+.auto_webcam_caption_block input[type="range"]#webcam_det_threshold::-webkit-slider-thumb {
+    width: 12px !important;
+    height: 12px !important;
+}
+
+.auto_webcam_caption_block input[type="text"] {
+    background-color: #000;
+    border: none;
+    padding: 5px;
+    border-radius: 4px;
+}
+
+/* Dark theme for number inputs */
+.auto_webcam_caption_block input[type="number"] {
+    background-color: #000;    
+    border: none;
+    padding: 5px;
+    border-radius: 4px;
+}
+
+.auto_webcam_caption_block textarea {
+    border: none;
+}
+
+#upload_section input[type="text"] {
+    width: 150px;
+    margin-right: 10px;
+}
