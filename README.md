@@ -8,9 +8,9 @@ Appends real-time AI-generated captions from your webcam to user messages in Sil
 - Custom hint templates (random variation) and caption prompts.
 - Manual "Look" trigger button (even if auto is off).
 - Toggle button and hotkey (Alt + W).
-- ![alt_text](https://github.com/grapehonda/Webcam-Caption-for-SillyTavern/blob/main/webcam_caption_server/Screenshots/Buttons.png)
+  ![alt_text](https://github.com/grapehonda/Webcam-Caption-for-SillyTavern/blob/main/webcam_caption_server/Screenshots/Buttons.png)
 - UI for uploading photos and regenerating embeddings (no command line needed).
-- ![alt text](https://github.com/grapehonda/Webcam-Caption-for-SillyTavern/blob/main/webcam_caption_server/Screenshots/UI.png)
+  ![alt text](https://github.com/grapehonda/Webcam-Caption-for-SillyTavern/blob/main/webcam_caption_server/Screenshots/UI.png)
 - Webcam preview in settings for easy testing.
 - Uses KoboldCPP with a vision model for captioning.
 
@@ -24,6 +24,7 @@ Appends real-time AI-generated captions from your webcam to user messages in Sil
 ## Installation
 1. Download and extract the `auto_webcam_caption` folder into your SillyTavern extensions directory (usually `SillyTavern/data/default-user/extensions/`).
 2. In the `auto_webcam_caption` folder, run `start_server.sh` on Linux, or `(windows)start_server.bat` for Windows.
+   ![alt_text](https://github.com/grapehonda/Webcam-Caption-for-SillyTavern/blob/main/webcam_caption_server/Screenshots/FileTree.png)
 
 ## Setup Face Recognition (Optional but Recommended)
 1. In SillyTavern extension settings, enable "Face Recognition".
