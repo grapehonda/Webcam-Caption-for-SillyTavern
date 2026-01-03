@@ -1,0 +1,13 @@
+venv/
+__pycache__/
+*.py[cod]
+*.pyo
+known_faces/
+*.pth
+.requirements_installed
+custom_prompts.json
+.DS_Store
+Thumbs.db
+.env
+*.log
+*.tmp
