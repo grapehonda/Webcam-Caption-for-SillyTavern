@@ -1,3 +1,5 @@
+// index1.js
+
 import { extension_settings, getContext, loadExtensionSettings } from "../../../extensions.js";
 import { saveSettingsDebounced, eventSource, event_types } from "../../../../script.js";
 const extensionName = "auto_webcam_caption";
@@ -307,6 +309,7 @@ globalThis.injectWebcamCaption = async function (chat, context, abort) {
   }
 };
 
+// Add both sacred buttons (toggle and Look) with poll
 function addToggleButton() {
   const interval = setInterval(() => {
     const inputBar = document.querySelector('#send_form');
@@ -322,8 +325,8 @@ function addToggleButton() {
       button.style.border = 'none';
       button.style.borderRadius = '4px';
       button.style.cursor = 'pointer';
-      button.style.fontSize = '0.9em';  // Slightly smaller text for compactness
-      button.innerHTML = '<i class="fa fa-video-camera" style="margin-right: 5px;"></i>' + (extension_settings[extensionName].enabled ? 'ON' : 'OFF');  // Add camera icon
+      button.style.fontSize = '0.9em';
+      button.innerHTML = '<i class="fa fa-video-camera" style="margin-right: 5px;"></i>' + (extension_settings[extensionName].enabled ? 'ON' : 'OFF');
       button.title = 'Toggle Auto Webcam Caption (Alt + W)';
 
       button.addEventListener('click', () => {
@@ -347,7 +350,7 @@ function addToggleButton() {
       lookButton.title = 'Trigger manual caption (even if auto is OFF)';
 
       lookButton.addEventListener('click', () => {
-        const userInput = document.getElementById('send_textarea');  // Updated to your ST input ID
+        const userInput = document.getElementById('send_textarea');
         if (userInput) {
           if (userInput.value.trim() !== '') {
             userInput.value += ' ';
@@ -370,6 +373,7 @@ function addToggleButton() {
     }
   }, 500);  // Check every 500ms until input bar exists
 }
+
 addToggleButton();
 
 async function checkWebcam() {
@@ -413,11 +417,17 @@ jQuery(async () => {
   resetIdleTimer();
 
   // Prompt descriptions for hover
-  const promptDescriptions = {
-      "Default": "Basic first-person description with factual bullets.",
-      "Roleplay Depth": "Adds roleplay flair for immersive storytelling.",
-      "Stranger Mode": "Third-person for unfamiliar people or groups."
-  };
+const promptDescriptions = {
+    "Default": "Basic first-person description with factual bullets, including colors and details.",
+    "Descriptive": "Vivid, detailed narrative without structured bullets for immersive scenes.",
+    "Multi-face": "Handles multiple faces or characters, with detailed group descriptions and colors.",
+    "Roleplay Depth": "Adds roleplay flair for immersive storytelling, focusing on emotions and details.",
+    "Stranger Mode": "Third-person perspective for unfamiliar people or groups, with objective observations.",
+    "Minimalist": "Short, concise descriptions focusing on essentials like clothing and colors.",
+    "Flirty Observer": "Suggestive and flirty tone, emphasizing attractive or playful elements.",
+    "Focus On You": "Centers on the main subject (you), with details on appearance and actions.",
+    "Surveillance Log": "Log-style entries like a security feed, noting timestamps and observations."
+};
 
   // Load prompts list
   async function refreshPromptList() {
@@ -488,7 +498,6 @@ jQuery(async () => {
               $('#webcam_caption_prompt').val(prompts[event.target.value]);
           });
   });
-
   // Initial refresh for prompts
   refreshPromptList();
 
