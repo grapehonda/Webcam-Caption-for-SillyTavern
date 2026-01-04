@@ -28,6 +28,7 @@ Appends real-time AI-generated captions from your webcam to user messages in Sil
 ## Installation
 1. Download and extract the `auto_webcam_caption` folder into your SillyTavern extensions directory (usually `SillyTavern/data/default-user/extensions/`).
 2. In the `auto_webcam_caption` folder, run `start_server.sh` on Linux, or `(windows)start_server.bat` for Windows.
+   
    ![alt_text](https://github.com/grapehonda/Webcam-Caption-for-SillyTavern/blob/main/webcam_caption_server/Screenshots/FileTree.png)
 
 ## Setup Face Recognition (Optional but Recommended)
