@@ -2,7 +2,7 @@
 
 Appends real-time AI-generated captions from your webcam to user messages in SillyTavern, enhancing immersion by describing what the AI "sees" in the room (e.g., your expression, gestures, background). Supports face recognition, add anyone you want with a few photos using the `upload & generate` button.
 ## Features
-- Automatic captioning every N messages (configurable, default every 1).
+- Automatic captioning every N messages (configurable, default every 3, always captions first message).
 - Face recognition using InsightFace (checks against your reference photos).
 - Multiple faces can be added for detection so characters recognize them by their given name (even Doobie the dog!)
 - Custom hint templates (random variation) and caption prompts.
