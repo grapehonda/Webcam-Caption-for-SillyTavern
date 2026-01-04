@@ -3,11 +3,17 @@
 Appends real-time AI-generated captions from your webcam to user messages in SillyTavern, enhancing immersion by describing what the AI "sees" in the room (e.g., your expression, gestures, background). Supports face recognition, add anyone you want with a few photos using the `upload & generate` button.
 ## Features
 - Automatic captioning every N messages (configurable, default every 3, always captions first message).
+- Idle captioning: Automatically triggers a caption and AI response after a configurable period of user inactivity (default: disabled, 300 seconds).
 - Face recognition using InsightFace (checks against your reference photos).
-- Multiple faces can be added for detection so characters recognize them by their given name (even Doobie the dog!)
+- Multiple faces can be added for detection so characters recognize them by their given name (even Doobie the dog!).
 - Custom hint templates (random variation) and caption prompts.
+- Custom idle hint templates.
 - Manual "Look" trigger button (even if auto is off).
-- Toggle button
+- Toggle button.
+- UI for uploading photos and regenerating embeddings (no command line needed).
+- Webcam preview in settings for easy testing.
+- Uses KoboldCPP with a vision model for captioning.
+- Configurable face detection threshold.
   
   ![alt_text](https://github.com/grapehonda/Webcam-Caption-for-SillyTavern/blob/main/webcam_caption_server/Screenshots/Buttons.png)
   
@@ -34,7 +40,7 @@ Appends real-time AI-generated captions from your webcam to user messages in Sil
 ## Setup Face Recognition (Optional but Recommended)
 1. In SillyTavern extension settings, enable "Face Recognition".
 2. Type a name for the person you're uploading (use `{{user}}` for yourself), select 5-10 clear photos of your face.
-3. Click `upload & generate` to process them.
+3. Click `Upload & Generate` to process them.
 4. Use the "Preview Webcam" button to test your camera setup.
 
 ## Usage
