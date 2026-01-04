@@ -15,7 +15,7 @@
                 <label for="webcam_face_recognition_enabled">Enable Face Recognition</label>
             </div>
 
-            <div class="auto_webcam_caption_block flex-container">
+                        <div class="auto_webcam_caption_block flex-container">
                 <input id="webcam_idle_enabled" type="checkbox" />
                 <label for="webcam_idle_enabled">Enable Idle Trigger</label>
             </div>
@@ -24,11 +24,6 @@
                 <label for="webcam_idle_frequency" style="margin-right: 5px;">Idle Frequency:</label>
                 <input id="webcam_idle_frequency" type="number" min="1" value="60" style="width: 60px; margin-right: 5px;" />
                 <span>seconds</span>
-            </div>
-
-            <div class="auto_webcam_caption_block flex-container">
-                <label for="webcam_idle_hints">Custom Idle Templates (use {{caption}} as placeholder; separate with --- for random)</label>
-                <textarea id="webcam_idle_hints" class="text_pole wide100p" rows="3"></textarea>
             </div>
 
             <div id="upload_section" class="auto_webcam_caption_block flex-container" style="flex-direction: row; align-items: center; margin-top: 10px;">
@@ -67,6 +62,11 @@
             <div class="auto_webcam_caption_block flex-container">
                 <input id="webcam_prompt_name" type="text" placeholder="Name your prompt" class="text_pole" maxlength="100" style="width: 200px; margin-right: 10px;">
                 <button id="webcam_save_prompt" style="padding: 5px 10px; background-color: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 0.9em;">Save Prompt</button>
+            </div>
+
+            <div class="auto_webcam_caption_block flex-container">
+                <label for="webcam_idle_hints">Custom Idle (Use {{caption}} as placeholder; separate with --- for random)</label>
+                <textarea id="webcam_idle_hints" class="text_pole wide100p" rows="3"></textarea>
             </div>
 
             <hr class="sysHR" />
