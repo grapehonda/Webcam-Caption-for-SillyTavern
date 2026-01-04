@@ -10,11 +10,11 @@ const defaultSettings = {
   enabled: true,
   hintTemplate: "*Observe and incorporate this into your response naturally, as if you see it in the room: \n{{caption}}*",
   manualMessage: "look at this",
-  faceRecognitionEnabled: true,  // New default: face check on
-  captionPrompt: ""  // New: blank by default, for custom caption prompt
-, frequency: 1  // New: 1 = every message, N = every Nth
-, promptName: 'Default'  // New: default selected prompt name
-, detThreshold: 0.5  // NEW: global face detection threshold
+  faceRecognitionEnabled: true,  // default: face check on
+  captionPrompt: ""  // blank by default, for custom caption prompt
+, frequency: 3  // 3 = every message, N = every Nth
+, promptName: 'Default'  // default selected prompt name
+, detThreshold: 0.5  // global face detection threshold
 };
 
 // Message counter (reset on chat load or manually if needed)
@@ -33,12 +33,12 @@ async function loadSettings() {
   $("#webcam_hint_template").val(extension_settings[extensionName].hintTemplate).trigger("input");
   $("#webcam_manual_message").val(extension_settings[extensionName].manualMessage).trigger("input");
   $("#webcam_face_recognition_enabled").prop("checked", extension_settings[extensionName].faceRecognitionEnabled).trigger("input");
-  $("#webcam_caption_prompt").val(extension_settings[extensionName].captionPrompt).trigger("input");  // New
-  $("#webcam_frequency").val(extension_settings[extensionName].frequency).trigger("input");  // New - trigger to update span
+  $("#webcam_caption_prompt").val(extension_settings[extensionName].captionPrompt).trigger("input");
+  $("#webcam_frequency").val(extension_settings[extensionName].frequency).trigger("input");  // trigger to update span
   updateFrequencyValue(extension_settings[extensionName].frequency);  // Initial update
-  // NEW: Load det threshold
+  // Load det threshold
   $("#webcam_det_threshold").val(extension_settings[extensionName].detThreshold).trigger("input");
-  updateDetThresholdValue(extension_settings[extensionName].detThreshold);  // NEW: initial update
+  updateDetThresholdValue(extension_settings[extensionName].detThreshold);  // initial update
 }
 
 // Function to update slider value text and CSS fill
@@ -52,7 +52,7 @@ function updateFrequencyValue(val) {
   }
 }
 
-// NEW: Function to update det threshold slider value text and CSS fill
+// Function to update det threshold slider value text and CSS fill
 function updateDetThresholdValue(val) {
   const slider = document.getElementById('webcam_det_threshold');
   const valueSpan = document.getElementById('webcam_det_threshold_value');
@@ -85,7 +85,7 @@ function onFaceRecognitionEnabledInput(event) {
   saveSettingsDebounced();
 }
 
-function onCaptionPromptInput(event) {  // New
+function onCaptionPromptInput(event) {
   extension_settings[extensionName].captionPrompt = $(event.target).val();
   saveSettingsDebounced();
 }
@@ -98,7 +98,7 @@ function onFrequencyInput(event) {
   saveSettingsDebounced();
 }
 
-// NEW: Handler for det threshold input
+// Handler for det threshold input
 function onDetThresholdInput(event) {
   let val = parseFloat($(event.target).val());
   if (isNaN(val) || val < 0.1) val = 0.1;
@@ -134,7 +134,7 @@ globalThis.injectWebcamCaption = async function (chat, contextSize, abort, type)
   const lastMes = chat[lastIndex]?.mes?.toLowerCase() || '';
   const isManual = lastMes.includes(manualMessage);
 
-  // NEW: Allow manual override even if enabled is false
+  // Allow manual override even if enabled is false
   if (!extension_settings[extensionName].enabled && !isManual) {
     console.log(`[${MODULE_NAME}] Extension disabled - skipping`);
     return;
@@ -143,14 +143,14 @@ globalThis.injectWebcamCaption = async function (chat, contextSize, abort, type)
   messageCount++;  // Increment counter
 
   const frequency = extension_settings[extensionName].frequency;
-  if (!isManual && frequency > 1 && messageCount % frequency !== 0) {
+  if (!isManual && frequency > 1 && ((messageCount - 1) % frequency !== 0)) {
     console.log(`[${MODULE_NAME}] Skipping caption (frequency: every ${frequency} messages, current: ${messageCount})`);
     return;
   }
 
   console.log(`[${MODULE_NAME}] Interceptor triggered - starting fetch (message ${messageCount})`);
 
-  // NEW: Check for webcam before proceeding
+  // Check for webcam before proceeding
   if (!(await checkWebcam())) {
     console.log('[auto_webcam_caption] No webcam detected - skipping caption');
     return;
@@ -206,18 +206,7 @@ globalThis.injectWebcamCaption = async function (chat, contextSize, abort, type)
   }
 };
 
-// Hotkey toggle (Alt + W)
-document.addEventListener('keydown', (event) => {
-  if (event.altKey && event.key.toLowerCase() === 'w') {
-    event.preventDefault();
-    extension_settings[extensionName].enabled = !extension_settings[extensionName].enabled;
-    updateToggleButton();
-    saveSettingsDebounced();
-    console.log(`[${MODULE_NAME}] Toggled via hotkey: ${extension_settings[extensionName].enabled ? 'Enabled' : 'Disabled'}`);
-  }
-});
-
-// Add both sacred buttons (toggle and Look) with poll (DON'T FUCKING REMOVE!)
+// Add both sacred buttons (toggle and Look) with poll
 function addToggleButton() {
   const interval = setInterval(() => {
     const inputBar = document.querySelector('#send_form');
