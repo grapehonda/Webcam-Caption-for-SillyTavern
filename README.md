@@ -47,7 +47,7 @@ This SillyTavern extension captures real-time images from your webcam, generates
 
 ### Manual Download
 
-1. Download the repository as a ZIP from [GitHub](https://github.com/grapehonda/Webcam-Caption-for-SillyTavern).
+1. Download the repository as a ZIP from [GitHub](https://github.com/grapehonda/Webcam-Caption-for-SillyTavern/releases).
 2. Extract the contents and rename the folder to `auto_webcam_caption` if necessary.
 3. Place the `auto_webcam_caption` folder into your SillyTavern extensions directory.
 4. Enter the server directory:
