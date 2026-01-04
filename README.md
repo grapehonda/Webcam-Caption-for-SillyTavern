@@ -9,7 +9,7 @@ Appends real-time AI-generated captions from your webcam to user messages in Sil
 - Custom hint templates (random variation) and caption prompts.
 - Custom idle hint templates.
 - Manual "Look" trigger button (even if auto is toggled off).
-- 
+ 
   ![alt_text](https://github.com/grapehonda/Webcam-Caption-for-SillyTavern/blob/main/webcam_caption_server/Screenshots/Buttons.png)
   
 - UI for uploading photos and regenerating embeddings (no command line needed).
