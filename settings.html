@@ -1,4 +1,3 @@
-<!-- Settings UI for the extension -->
 <div class="auto_webcam_caption-settings">
     <div class="inline-drawer">
         <div class="inline-drawer-toggle inline-drawer-header">
@@ -14,6 +13,22 @@
             <div class="auto_webcam_caption_block flex-container">
                 <input id="webcam_face_recognition_enabled" type="checkbox" />
                 <label for="webcam_face_recognition_enabled">Enable Face Recognition</label>
+            </div>
+
+            <div class="auto_webcam_caption_block flex-container">
+                <input id="webcam_idle_enabled" type="checkbox" />
+                <label for="webcam_idle_enabled">Enable Idle Trigger</label>
+            </div>
+
+            <div class="auto_webcam_caption_block flex-container" style="align-items: center;">
+                <label for="webcam_idle_frequency" style="margin-right: 5px;">Idle Frequency:</label>
+                <input id="webcam_idle_frequency" type="number" min="1" value="60" style="width: 60px; margin-right: 5px;" />
+                <span>seconds</span>
+            </div>
+
+            <div class="auto_webcam_caption_block flex-container">
+                <label for="webcam_idle_hints">Custom Idle Templates (use {{caption}} as placeholder; separate with --- for random)</label>
+                <textarea id="webcam_idle_hints" class="text_pole wide100p" rows="3"></textarea>
             </div>
 
             <div id="upload_section" class="auto_webcam_caption_block flex-container" style="flex-direction: row; align-items: center; margin-top: 10px;">
