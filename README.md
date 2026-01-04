@@ -12,7 +12,7 @@ This SillyTavern extension captures real-time images from your webcam, generates
 - **Face Recognition**: Powered by InsightFace; detects and recognizes faces against your uploaded reference photos. Supports multiple faces with custom names (e.g., use `{{user}}` for yourself or name your pet!).
 - **Customizable Prompts**: Randomly varying hint templates and caption prompts for tailored responses.
 - **Custom Idle Hint Templates**: For idle captioning scenarios.
-- **Manual Trigger**: "Look" button for on-demand captions, even when auto is disabled. ![Buttons](https://github.com/grapehonda/Webcam-Caption-for-SillyTavern/blob/main/webcam_caption_server/Screenshots/Buttons.png)
+- **Manual Trigger**: "Look" button for on-demand captions, even when auto is disabled.            ![Buttons](https://github.com/grapehonda/Webcam-Caption-for-SillyTavern/blob/main/webcam_caption_server/Screenshots/Buttons.png)
 - **Toggle Control**: Easy on/off toggle via camera icon button or hotkey (Alt + W).
 - **User-Friendly UI**: Upload photos, regenerate embeddings, and preview webcam directly in settings—no command line required.
 - **Local Processing**: Uses KoboldCPP with a vision model; everything runs offline.
