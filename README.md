@@ -1,53 +1,103 @@
+
 # Auto Webcam Caption Extension for SillyTavern
 
-Appends real-time AI-generated captions from your webcam to user messages in SillyTavern, enhancing immersion by describing what the AI "sees" in the room (e.g., your expression, gestures, background). Supports face recognition, add anyone you want with a few photos using the `upload & generate` button.
+![Webcam Caption Extension](https://via.placeholder.com/800x400?text=Webcam+Caption+Extension) <!-- Placeholder for a screenshot; replace with actual image if available -->
+
+This SillyTavern extension captures real-time images from your webcam, generates AI-powered captions describing what the AI "sees" (like your expressions, gestures, or background), and appends them to user messages for enhanced immersion. It includes face recognition support, allowing you to add multiple people or pets with just a few photos via the user-friendly UI.
+
 ## Features
-- Automatic captioning every N messages (configurable, default every 3, always captions first message).
-- Idle captioning: Automatically triggers a caption and AI response after a configurable period of user inactivity (default: disabled, 300 seconds).
-- Face recognition using InsightFace (checks against your reference photos).
-- Multiple faces can be added for detection so characters recognize them by their given name (even Doobie the dog!).
-- Custom hint templates (random variation) and caption prompts.
-- Custom idle hint templates.
-- Manual "Look" trigger button (even if auto is toggled off).
- 
-  ![alt_text](https://github.com/grapehonda/Webcam-Caption-for-SillyTavern/blob/main/webcam_caption_server/Screenshots/Buttons.png)
-  
-- UI for uploading photos and regenerating embeddings (no command line needed).
-  ![alt text](https://github.com/grapehonda/Webcam-Caption-for-SillyTavern/blob/main/webcam_caption_server/Screenshots/NewUI.png)
-  
-- Webcam preview in settings for easy testing.
-- Uses KoboldCPP with a vision model for captioning.
-- Configurable face detection threshold.
+
+- **Automatic Captioning**: Triggers every N messages (configurable, default every 3; always captions the first message).
+- **Idle Captioning**: Automatically triggers a caption and AI response after a configurable period of user inactivity (default: disabled, 300 seconds).
+- **Face Recognition**: Powered by InsightFace; detects and recognizes faces against your uploaded reference photos. Supports multiple faces with custom names (e.g., use `{{user}}` for yourself or name your pet!).
+- **Customizable Prompts**: Randomly varying hint templates and caption prompts for tailored responses.
+- **Custom Idle Hint Templates**: For idle captioning scenarios.
+- **Manual Trigger**: "Look" button for on-demand captions, even when auto is disabled.
+- **Toggle Control**: Easy on/off toggle via camera icon button or hotkey (Alt + W).
+- **User-Friendly UI**: Upload photos, regenerate embeddings, and preview webcam directly in settings—no command line required.
+- **Local Processing**: Uses KoboldCPP with a vision model; everything runs offline.
+- **Configurable Face Detection Threshold**: Adjust the similarity threshold for recognition.
 
 ## Requirements
-- SillyTavern installed.
-- Python 3.8+ with venv.
-- KoboldCPP running two instances: vision model on port 5002 (with --mmproj), text model on port 5001.
-- Webcam access.
-- Dependencies: `flask`, `flask-cors`, `opencv-python`, `requests`, `torch`, `insightface`, `onnxruntime-gpu`, `numpy`.
+
+- SillyTavern installed (latest version recommended).
+- Python 3.8+ with virtual environment (venv).
+- KoboldCPP setup with two instances:
+  - Vision model on port 5002 (use `--mmproj` flag).
+  - Text model on port 5001.
+- Webcam with granted access permissions.
+- Python Dependencies: `flask`, `flask-cors`, `opencv-python`, `requests`, `torch`, `insightface`, `onnxruntime-gpu`, `numpy`.
 
 ## Installation
-1. Download and extract the `auto_webcam_caption` folder into your SillyTavern extensions directory (usually `SillyTavern/data/default-user/extensions/`).
-2. In the `auto_webcam_caption` folder, run `start_server.sh` on Linux, or `(windows)start_server.bat` for Windows.
-   
-   ![alt_text](https://github.com/grapehonda/Webcam-Caption-for-SillyTavern/blob/main/webcam_caption_server/Screenshots/FileTree.png)
+
+### Via Git Clone (Recommended for Developers)
+
+1. Navigate to your SillyTavern extensions directory (typically `SillyTavern/public/extensions/` or `SillyTavern/data/default-user/extensions/`).
+2. Clone the repository:
+   ```
+   git clone https://github.com/grapehonda/Webcam-Caption-for-SillyTavern.git auto_webcam_caption
+   ```
+3. Enter the server directory:
+   ```
+   cd auto_webcam_caption/webcam_caption_server
+   ```
+4. Start the server (this will automatically create and activate a virtual environment, install dependencies if needed):
+   - Linux: `./start_server.sh`
+   - Windows: `(windows)start_server.bat`
+
+### Manual Download
+
+1. Download the repository as a ZIP from [GitHub](https://github.com/grapehonda/Webcam-Caption-for-SillyTavern).
+2. Extract the contents and rename the folder to `auto_webcam_caption` if necessary.
+3. Place the `auto_webcam_caption` folder into your SillyTavern extensions directory.
+4. Enter the server directory:
+   ```
+   cd auto_webcam_caption/webcam_caption_server
+   ```
+5. Start the server (this will automatically create and activate a virtual environment, install dependencies if needed):
+   - Linux: `./start_server.sh`
+   - Windows: `(windows)start_server.bat`
 
 ## Setup Face Recognition (Optional but Recommended)
-1. In SillyTavern extension settings, enable "Face Recognition".
-2. Type a name for the person you're uploading (use `{{user}}` for yourself), select 5-10 clear photos of your face.
-3. Click `Upload & Generate` to process them.
-4. Use the "Preview Webcam" button to test your camera setup.
+
+1. In SillyTavern's extension settings, enable "Face Recognition".
+2. Type a name for the person/pet (e.g., `{{user}}` for yourself).
+3. Select 5-10 clear photos and click "Upload & Generate" to create embeddings.
+4. Optionally delete photos after processing for privacy.
+5. Test with the "Preview Webcam" button.
 
 ## Usage
-- Toggle auto-captioning with the camera icon button.
-- Click the "Look" button for a manual caption (works even if auto is off; sends your custom trigger message).
-- Customize settings: face recognition toggle, frequency slider, hint templates (use `{{caption}}` placeholder), custom caption prompt.
-- Quick test: `curl -X POST http://127.0.0.1:5000/v1/chat/completions -H "Content-Type: application/json" -d '{"enable_face_check": true}'`.
+
+- **Toggle Auto-Captioning**: Use the camera icon button or press Alt + W.
+- **Manual Caption**: Click the "Look" button to generate a caption on demand (sends a custom trigger message).
+- **Customization**: Adjust face recognition toggle, caption frequency, hint templates (include `{{caption}}` placeholder), custom prompts, idle settings, and face detection threshold in settings.
+- **Quick Test**: Run this curl command to verify the server:
+  ```
+  curl -X POST http://127.0.0.1:5000/v1/chat/completions -H "Content-Type: application/json" -d '{"enable_face_check": true}'
+  ```
 
 ## Notes & Troubleshooting
-- Captions are short, immersive bullet points from the AI's perspective (e.g., "You're smiling warmly into my eyes").
-- If captions feel off, tweak the custom prompt or hint templates in the extension settings.
-- Face recognition: >0.55 similarity = you (uses "you/your"); else treats as stranger.
-- Common issues: Ensure webcam permissions, KoboldCPP ports are free, and venv is active when running the server.
-- No internet required—everything runs locally.
-- Author: Gil | Version: 1.0
+
+- **Caption Style**: Short, immersive bullet points from the AI's viewpoint (e.g., "*You're smiling warmly into my eyes*").
+- **Tuning Captions**: If results seem off, refine the custom prompt or hint templates in settings.
+- **Face Recognition Threshold**: Similarity > 0.55 identifies as "you" (uses "you/your"); otherwise, treats as a stranger. Adjustable in settings.
+- **Common Issues**:
+  - Confirm webcam permissions in your browser/OS.
+  - Ensure KoboldCPP ports (5001, 5002) are available and not in use.
+  - The start script handles venv activation automatically.
+- **Privacy & Local Operation**: No internet needed; all processing is local.
+- **Author**: Gil | **Version**: 1.1
+
+## Contributing
+
+Contributions are welcome! Feel free to submit pull requests for bug fixes, new features, or improvements. Please follow these steps:
+
+1. Fork the repository.
+2. Create a feature branch (`git checkout -b feature/YourFeature`).
+3. Commit your changes (`git commit -m 'Add YourFeature'`).
+4. Push to the branch (`git push origin feature/YourFeature`).
+5. Open a pull request.
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
