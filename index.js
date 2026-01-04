@@ -219,11 +219,12 @@ function addToggleButton() {
       button.style.cursor = 'pointer';
       button.style.fontSize = '0.9em';  // Slightly smaller text for compactness
       button.innerHTML = '<i class="fa fa-video-camera" style="margin-right: 5px;"></i>' + (extension_settings[extensionName].enabled ? 'ON' : 'OFF');  // Add camera icon
-      button.title = 'Toggle Auto Webcam Caption (Alt + W)';
+      button.title = 'Toggle Auto Webcam Caption';
 
       button.addEventListener('click', () => {
         extension_settings[extensionName].enabled = !extension_settings[extensionName].enabled;
         updateToggleButton();
+        $("#webcam_enabled").prop("checked", extension_settings[extensionName].enabled).trigger("input");
         saveSettingsDebounced();
         console.log(`[${MODULE_NAME}] Toggled via button: ${extension_settings[extensionName].enabled ? 'Enabled' : 'Disabled'}`);
       });
@@ -258,6 +259,7 @@ function addToggleButton() {
         }
       });
 
+// SPLIT HERE (end of first half)
       // Insert sacred toggle and look button at the beginning
       inputBar.insertBefore(button, inputBar.firstChild);
       inputBar.insertBefore(lookButton, inputBar.firstChild.nextSibling);
