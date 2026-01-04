@@ -38,7 +38,7 @@ Appends real-time AI-generated captions from your webcam to user messages in Sil
 4. Use the "Preview Webcam" button to test your camera setup.
 
 ## Usage
-- Toggle auto-captioning with the camera icon button or Alt + W.
+- Toggle auto-captioning with the camera icon button.
 - Click the "Look" button for a manual caption (works even if auto is off; sends your custom trigger message).
 - Customize settings: face recognition toggle, frequency slider, hint templates (use `{{caption}}` placeholder), custom caption prompt.
 - Quick test: `curl -X POST http://127.0.0.1:5000/v1/chat/completions -H "Content-Type: application/json" -d '{"enable_face_check": true}'`.
