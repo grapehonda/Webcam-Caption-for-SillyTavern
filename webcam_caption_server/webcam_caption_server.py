@@ -355,4 +355,4 @@ def update_det_threshold():
 
 if __name__ == '__main__':
     print("Caption server running - on-demand")
-    flask_app.run(host='0.0.0.0', port=FLASK_PORT)
+    flask_app.run(host='127.0.0.1', port=FLASK_PORT)
