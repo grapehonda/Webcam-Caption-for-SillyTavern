@@ -1,5 +1,5 @@
 import { extension_settings, getContext, loadExtensionSettings } from "../../../extensions.js";
-import { saveSettingsDebounced } from "../../../../script.js";
+import { saveSettingsDebounced, eventSource, event_types } from "../../../../script.js";
 const extensionName = "auto_webcam_caption";
 const extensionFolderPath = `scripts/extensions/third-party/${extensionName}`;
 const extensionSettings = extension_settings[extensionName];
@@ -12,9 +12,90 @@ const defaultSettings = {
 , frequency: 3  // 3 = every message, N = every Nth
 , promptName: 'Default'  // Default selected prompt name
 , detThreshold: 0.5  // Global face detection threshold
+, idleEnabled: false,
+  idleFrequency: 300,
+  idleHints: "*The room has gone quiet: {{caption}}*",
 };
 
 let messageCount = 0;
+
+// Idle timer setup
+let idleTimer = null;
+
+function resetIdleTimer() {
+  if (idleTimer) clearTimeout(idleTimer);
+  if (extension_settings[extensionName].idleEnabled) {
+    idleTimer = setTimeout(triggerIdleCaption, extension_settings[extensionName].idleFrequency * 1000);
+  }
+}
+
+async function triggerIdleCaption() {
+  console.log('[auto_webcam_caption] Idle timer triggered');
+  const context = getContext();
+  if (!context.chat || context.chat.length === 0) {
+    resetIdleTimer();
+    return;
+  }
+
+  if (!(await checkWebcam())) {
+    resetIdleTimer();
+    return;
+  }
+
+  let latestCaption = '';
+  try {
+    const response = await fetch(FLASK_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        enable_face_check: extension_settings[extensionName].faceRecognitionEnabled,
+        caption_prompt: extension_settings[extensionName].captionPrompt
+      }),
+    });
+
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+
+    const data = await response.json();
+    latestCaption = data.choices[0].message.content.trim();
+
+    if (latestCaption.startsWith('Error') || latestCaption === '') {
+      console.log('[auto_webcam_caption] Invalid idle caption - skipping');
+      resetIdleTimer();
+      return;
+    }
+
+    if (latestCaption === previousCaption) {
+      console.log('[auto_webcam_caption] Duplicate idle caption - skipping');
+      resetIdleTimer();
+      return;
+    }
+    previousCaption = latestCaption;
+
+    let hintTemplates = extension_settings[extensionName].idleHints.split('---').map(line => line.trim()).filter(line => line !== '');
+    if (hintTemplates.length === 0) hintTemplates = ['*The room has gone quiet: {{caption}}*'];
+    const hint = hintTemplates[Math.floor(Math.random() * hintTemplates.length)].replace('{{caption}}', latestCaption);
+
+    // Add new hidden user message
+    const newMessage = {
+      name: context.name1,
+      is_user: true,
+      is_name: false,
+      is_system: false,
+      sendDate: Date.now(),
+      mes: `\n\n${hint}`,
+      extra: { isSmallSys: true }
+    };
+    context.chat.push(newMessage);
+
+    // Trigger AI generation
+    await context.generate();
+
+  } catch (error) {
+    console.error('[auto_webcam_caption] Idle caption error:', error);
+  } finally {
+    resetIdleTimer();
+  }
+}
 
 // Loads the extension settings if they exist, otherwise initializes them to the defaults.
 async function loadSettings() {
@@ -34,6 +115,9 @@ async function loadSettings() {
   updateFrequencyValue(extension_settings[extensionName].frequency);
   $("#webcam_det_threshold").val(extension_settings[extensionName].detThreshold).trigger("input");
   updateDetThresholdValue(extension_settings[extensionName].detThreshold);
+  $("#webcam_idle_enabled").prop("checked", extension_settings[extensionName].idleEnabled).trigger("input");
+  $("#webcam_idle_frequency").val(extension_settings[extensionName].idleFrequency).trigger("input");
+  $("#webcam_idle_hints").val(extension_settings[extensionName].idleHints).trigger("input");
 }
 
 // Function to update slider value text and CSS fill
@@ -109,6 +193,25 @@ function onDetThresholdInput(event) {
   }).catch(error => console.error('Error updating det threshold:', error));
 }
 
+function onIdleEnabledInput(event) {
+  extension_settings[extensionName].idleEnabled = Boolean($(event.target).prop('checked'));
+  saveSettingsDebounced();
+  resetIdleTimer();
+}
+
+function onIdleFrequencyInput(event) {
+  let val = parseInt($(event.target).val());
+  if (isNaN(val) || val < 1) val = 1;
+  extension_settings[extensionName].idleFrequency = val;
+  saveSettingsDebounced();
+  resetIdleTimer();
+}
+
+function onIdleHintsInput(event) {
+  extension_settings[extensionName].idleHints = $(event.target).val();
+  saveSettingsDebounced();
+}
+
 // Update the toggle button state based on settings
 function updateToggleButton() {
   const button = document.getElementById('webcam-toggle-btn');
@@ -123,11 +226,14 @@ const FLASK_ENDPOINT = 'http://127.0.0.1:5000/v1/chat/completions';
 
 let previousCaption = '';
 
-globalThis.injectWebcamCaption = async function (chat, contextSize, abort, type) {
-  const manualMessage = extension_settings[extensionName].manualMessage.toLowerCase();
+globalThis.injectWebcamCaption = async function (chat, context, abort) {
   const lastIndex = chat.length - 1;
+  if (chat[lastIndex].extra?.isSmallSys) {
+    console.log(`[${MODULE_NAME}] Skipping caption for hidden system message`);
+    return;
+  }
   const lastMes = chat[lastIndex]?.mes?.toLowerCase() || '';
-  const isManual = lastMes.includes(manualMessage);
+  const isManual = lastMes.includes(extension_settings[extensionName].manualMessage.toLowerCase());
 
   // Allow manual override even if enabled is false
   if (!extension_settings[extensionName].enabled && !isManual) {
@@ -201,7 +307,6 @@ globalThis.injectWebcamCaption = async function (chat, contextSize, abort, type)
   }
 };
 
-// Add both sacred buttons (toggle and Look) with poll
 function addToggleButton() {
   const interval = setInterval(() => {
     const inputBar = document.querySelector('#send_form');
@@ -219,12 +324,11 @@ function addToggleButton() {
       button.style.cursor = 'pointer';
       button.style.fontSize = '0.9em';  // Slightly smaller text for compactness
       button.innerHTML = '<i class="fa fa-video-camera" style="margin-right: 5px;"></i>' + (extension_settings[extensionName].enabled ? 'ON' : 'OFF');  // Add camera icon
-      button.title = 'Toggle Auto Webcam Caption';
+      button.title = 'Toggle Auto Webcam Caption (Alt + W)';
 
       button.addEventListener('click', () => {
         extension_settings[extensionName].enabled = !extension_settings[extensionName].enabled;
         updateToggleButton();
-        $("#webcam_enabled").prop("checked", extension_settings[extensionName].enabled).trigger("input");
         saveSettingsDebounced();
         console.log(`[${MODULE_NAME}] Toggled via button: ${extension_settings[extensionName].enabled ? 'Enabled' : 'Disabled'}`);
       });
@@ -259,8 +363,6 @@ function addToggleButton() {
         }
       });
 
-// SPLIT HERE (end of first half)
-      // Insert sacred toggle and look button at the beginning
       inputBar.insertBefore(button, inputBar.firstChild);
       inputBar.insertBefore(lookButton, inputBar.firstChild.nextSibling);
 
@@ -268,10 +370,8 @@ function addToggleButton() {
     }
   }, 500);  // Check every 500ms until input bar exists
 }
-  // Add sacred on/off & look buttons
-  addToggleButton();
+addToggleButton();
 
-// Webcam availability check function
 async function checkWebcam() {
   try {
     const devices = await navigator.mediaDevices.enumerateDevices();
@@ -294,9 +394,23 @@ jQuery(async () => {
   $("#webcam_caption_prompt").on("input", onCaptionPromptInput);
   $("#webcam_frequency").on("input", onFrequencyInput);
   $('#webcam_det_threshold').on('input', onDetThresholdInput);
+  $("#webcam_idle_enabled").on("input", onIdleEnabledInput);
+  $("#webcam_idle_frequency").on("input", onIdleFrequencyInput);
+  $("#webcam_idle_hints").on("input", onIdleHintsInput);
 
   // Load settings when starting things up
   await loadSettings();
+
+  // Event listeners to reset idle timer
+  eventSource.on(event_types.MESSAGE_SENT, resetIdleTimer);
+  eventSource.on(event_types.MESSAGE_RECEIVED, resetIdleTimer);
+  eventSource.on(event_types.CHAT_CHANGED, resetIdleTimer);
+
+  // Reset on input changes
+  $('#send_textarea').on('input', resetIdleTimer);
+
+  // Initial timer setup
+  resetIdleTimer();
 
   // Prompt descriptions for hover
   const promptDescriptions = {
@@ -395,28 +509,32 @@ jQuery(async () => {
 
     const uploadGenerateButton = document.createElement('button');
     uploadGenerateButton.textContent = 'Upload & Generate';
-    uploadGenerateButton.style = 'padding: 5px 10px; background-color: #2196F3; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 0.9em;';
-    uploadGenerateButton.addEventListener('click', () => {
-      if (!nameInput.value.trim()) {
-        alert('Enter a name first');
-        return;
-      }
-      uploadInput.click();
-    });
+    uploadGenerateButton.style.padding = '5px 10px';
+    uploadGenerateButton.style.backgroundColor = '#4CAF50';
+    uploadGenerateButton.style.color = 'white';
+    uploadGenerateButton.style.border = 'none';
+    uploadGenerateButton.style.borderRadius = '4px';
+    uploadGenerateButton.style.cursor = 'pointer';
+    uploadGenerateButton.style.fontSize = '0.9em';
 
+    uploadGenerateButton.addEventListener('click', () => uploadInput.click());
     uploadInput.addEventListener('change', async () => {
+      const files = uploadInput.files;
       const name = nameInput.value.trim();
-      if (!name || uploadInput.files.length === 0) {
-        alert('Need name and photos');
+      if (!name || files.length === 0) {
+        alert('Need name and at least one image');
         return;
       }
       const formData = new FormData();
-      for (const file of uploadInput.files) {
-        formData.append('photos', file);
-      }
       formData.append('name', name);
+      for (const file of files) {
+        formData.append('images', file);
+      }
       try {
-        const response = await fetch('http://127.0.0.1:5000/add_person', { method: 'POST', body: formData });
+        const response = await fetch('http://127.0.0.1:5000/add_person', {
+          method: 'POST',
+          body: formData
+        });
         const data = await response.json();
         if (data.status === 'success') {
           alert(data.message);
