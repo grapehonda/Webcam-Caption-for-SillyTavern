@@ -1,5 +1,3 @@
-// index1.js
-
 import { extension_settings, getContext, loadExtensionSettings } from "../../../extensions.js";
 import { saveSettingsDebounced, eventSource, event_types } from "../../../../script.js";
 const extensionName = "auto_webcam_caption";
