@@ -1,3 +1,5 @@
+// index1.js
+
 import { extension_settings, getContext, loadExtensionSettings } from "../../../extensions.js";
 import { saveSettingsDebounced, eventSource, event_types } from "../../../../script.js";
 const extensionName = "auto_webcam_caption";
@@ -325,7 +327,7 @@ function addToggleButton() {
       button.style.cursor = 'pointer';
       button.style.fontSize = '0.9em';
       button.innerHTML = '<i class="fa fa-video-camera" style="margin-right: 5px;"></i>' + (extension_settings[extensionName].enabled ? 'ON' : 'OFF');
-      button.title = 'Toggle Auto Webcam Caption (Alt + W)';
+      button.title = 'Toggle Auto Webcam Caption';
 
       button.addEventListener('click', () => {
         extension_settings[extensionName].enabled = !extension_settings[extensionName].enabled;
