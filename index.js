@@ -1,23 +1,19 @@
-// The main script for the extension
 import { extension_settings, getContext, loadExtensionSettings } from "../../../extensions.js";
 import { saveSettingsDebounced } from "../../../../script.js";
-
-// Keep track of where your extension is located
 const extensionName = "auto_webcam_caption";
 const extensionFolderPath = `scripts/extensions/third-party/${extensionName}`;
 const extensionSettings = extension_settings[extensionName];
 const defaultSettings = {
   enabled: true,
   hintTemplate: "*Observe and incorporate this into your response naturally, as if you see it in the room: \n{{caption}}*",
-  manualMessage: "look at this",
-  faceRecognitionEnabled: true,  // default: face check on
-  captionPrompt: ""  // blank by default, for custom caption prompt
+  manualMessage: "Hey, look.",
+  faceRecognitionEnabled: true,  // Default: face check on
+  captionPrompt: ""  // Blank by default, for custom caption prompt
 , frequency: 3  // 3 = every message, N = every Nth
-, promptName: 'Default'  // default selected prompt name
-, detThreshold: 0.5  // global face detection threshold
+, promptName: 'Default'  // Default selected prompt name
+, detThreshold: 0.5  // Global face detection threshold
 };
 
-// Message counter (reset on chat load or manually if needed)
 let messageCount = 0;
 
 // Loads the extension settings if they exist, otherwise initializes them to the defaults.
@@ -34,11 +30,10 @@ async function loadSettings() {
   $("#webcam_manual_message").val(extension_settings[extensionName].manualMessage).trigger("input");
   $("#webcam_face_recognition_enabled").prop("checked", extension_settings[extensionName].faceRecognitionEnabled).trigger("input");
   $("#webcam_caption_prompt").val(extension_settings[extensionName].captionPrompt).trigger("input");
-  $("#webcam_frequency").val(extension_settings[extensionName].frequency).trigger("input");  // trigger to update span
-  updateFrequencyValue(extension_settings[extensionName].frequency);  // Initial update
-  // Load det threshold
+  $("#webcam_frequency").val(extension_settings[extensionName].frequency).trigger("input");
+  updateFrequencyValue(extension_settings[extensionName].frequency);
   $("#webcam_det_threshold").val(extension_settings[extensionName].detThreshold).trigger("input");
-  updateDetThresholdValue(extension_settings[extensionName].detThreshold);  // initial update
+  updateDetThresholdValue(extension_settings[extensionName].detThreshold);
 }
 
 // Function to update slider value text and CSS fill
@@ -92,9 +87,9 @@ function onCaptionPromptInput(event) {
 
 function onFrequencyInput(event) {
   let val = parseInt($(event.target).val());
-  if (isNaN(val) || val < 1) val = 1;  // Fallback to 1 if invalid
+  if (isNaN(val) || val < 1) val = 1;
   extension_settings[extensionName].frequency = val;
-  updateFrequencyValue(val);  // Update text and fill
+  updateFrequencyValue(val);
   saveSettingsDebounced();
 }
 
@@ -181,7 +176,7 @@ globalThis.injectWebcamCaption = async function (chat, contextSize, abort, type)
       return;
     }
 
-    // Dedup: Skip if identical to previous
+    // Skip if identical to previous
     if (latestCaption === previousCaption) {
       console.log(`[${MODULE_NAME}] Duplicate caption - skipping`);
       return;
@@ -271,10 +266,10 @@ function addToggleButton() {
     }
   }, 500);  // Check every 500ms until input bar exists
 }
-  // Add sacred on/off & look buttons (DON'T FUCKING REMOVE!!!)
+  // Add sacred on/off & look buttons
   addToggleButton();
 
-// NEW: Webcam availability check function
+// Webcam availability check function
 async function checkWebcam() {
   try {
     const devices = await navigator.mediaDevices.enumerateDevices();
@@ -287,19 +282,15 @@ async function checkWebcam() {
 
 // This function is called when the extension is loaded
 jQuery(async () => {
-  // Load settings HTML
   const settingsHtml = await $.get(`${extensionFolderPath}/settings.html`);
   $("#extensions_settings").append(settingsHtml);
 
   // Listen for settings changes
-  // ORIGINAL LINE (comment out and remove): $("#webcam_enabled").on("input", onEnabledInput);
-  // NEW: The line above is already there, no change needed
   $("#webcam_hint_template").on("input", onHintTemplateInput);
   $("#webcam_manual_message").on("input", onManualMessageInput);
   $("#webcam_face_recognition_enabled").on("input", onFaceRecognitionEnabledInput);
   $("#webcam_caption_prompt").on("input", onCaptionPromptInput);
   $("#webcam_frequency").on("input", onFrequencyInput);
-  // NEW: Bind det threshold input event
   $('#webcam_det_threshold').on('input', onDetThresholdInput);
 
   // Load settings when starting things up
@@ -310,7 +301,6 @@ jQuery(async () => {
       "Default": "Basic first-person description with factual bullets.",
       "Roleplay Depth": "Adds roleplay flair for immersive storytelling.",
       "Stranger Mode": "Third-person for unfamiliar people or groups."
-      // Add more from brainstorm as needed
   };
 
   // Load prompts list
@@ -518,7 +508,6 @@ jQuery(async () => {
     }
   }
 
-  // Initial refresh
   refreshKnownList();
 
   // Add Webcam Preview button and video
@@ -556,7 +545,7 @@ jQuery(async () => {
       previewButton.textContent = 'Preview Webcam';
       console.log('[auto_webcam_caption] Webcam preview stopped');
     } else {
-      // NEW: Check for webcam
+      // Check for webcam
       if (!(await checkWebcam())) {
         alert('No webcam detected. Please connect one and try again.');
         return;
