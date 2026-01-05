@@ -1,9 +1,11 @@
 
 # Auto Webcam Caption Extension for SillyTavern
 
-![Webcam Caption Extension](https://github.com/grapehonda/Webcam-Caption-for-SillyTavern/blob/main/webcam_caption_server/Screenshots/NewUI.png)
+  ![Webcam Caption Extension](https://github.com/grapehonda/Webcam-Caption-for-SillyTavern/blob/main/webcam_caption_server/Screenshots/NewUI.png)
 
 This SillyTavern extension captures real-time images from your webcam, generates AI-powered captions describing what the AI "sees" (like your expressions, gestures, or background), and appends them to user messages for enhanced immersion. It includes face recognition support, allowing you to add multiple people or pets with just a few photos via the user-friendly UI.
+
+ ![Example](https://github.com/grapehonda/Webcam-Caption-for-SillyTavern/blob/main/webcam_caption_server/Screenshots/example.png)
 
 ## Features
 
