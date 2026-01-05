@@ -37,7 +37,7 @@ This SillyTavern extension captures real-time images from your webcam, generates
 
 ### Via Git Clone (Recommended for Developers)
 
-1. Navigate to your SillyTavern extensions directory (typically `SillyTavern/public/extensions/` or `SillyTavern/data/default-user/extensions/`).
+1. Navigate to your SillyTavern extensions directory (typically `SillyTavern/data/default-user/extensions/`).
 2. Clone the repository:
    ```
    git clone https://github.com/grapehonda/Webcam-Caption-for-SillyTavern.git auto_webcam_caption
@@ -74,7 +74,7 @@ This SillyTavern extension captures real-time images from your webcam, generates
 
 ## Usage
 
-- **Toggle Auto-Captioning**: Use the camera icon button or press Alt + W.
+- **Toggle Auto-Captioning**: Use the camera icon button.
 - **Manual Caption**: Click the "Look" button to generate a caption on demand (sends a custom trigger message).
 - **Customization**: Adjust face recognition toggle, caption frequency, hint templates (include `{{caption}}` placeholder), custom prompts, idle settings, and face detection threshold in settings.
 - **Quick Test**: Run this curl command to verify the server:
